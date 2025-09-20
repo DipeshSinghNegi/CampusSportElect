@@ -1,144 +1,99 @@
-# Voting App Frontend
+# CampusSportElect
 
-A modern React frontend for the Voting App, built with Vite, React Router, Axios, and TailwindCSS.
+An online sports election system for college sports secretary elections. Built with React, Vite, Tailwind CSS, Node.js (Express), and MongoDB.
 
 ## Features
 
-- **Authentication**: Login and Register with JWT token management
-- **Protected Routes**: Secure access to dashboard and poll pages
-- **Dashboard**: View all available polls with voting capabilities
-- **Create Polls**: Admin-only functionality to create new poll options
-- **Poll Details**: Detailed view with voting form and interactive charts
-- **Real-time Updates**: Live voting results with beautiful visualizations
-- **Responsive Design**: Clean, modern UI that works on all devices
+- **Role-Based Dashboards**: Separate admin and user dashboards for candidate management and voting.
+- **Category-Based Voting**: Students can vote for one boy and one girl per sports category.
+- **Secure Authentication**: JWT-based login and registration for users and admins.
+- **Candidate Management**: Admins can add, delete, and view candidates grouped by category and gender.
+- **Real-Time Results**: Instant updates of votes and results on the dashboard.
+- **RESTful APIs**: Backend exposes endpoints for authentication, candidate management, and voting.
+- **Optimized MongoDB Schemas**: Efficient data models for users, candidates, and votes.
+- **Responsive UI**: Modern, mobile-friendly design using Tailwind CSS.
 
 ## Tech Stack
 
-- **React 18** - Modern React with hooks
-- **Vite** - Fast build tool and dev server
-- **React Router v6** - Client-side routing
-- **Axios** - HTTP client with interceptors
-- **TailwindCSS** - Utility-first CSS framework
-- **Recharts** - Beautiful charts and visualizations
-- **Socket.IO Client** - Real-time communication
-
-## Setup Instructions
-
-### Prerequisites
-
-Make sure you have Node.js (v16 or higher) and npm installed on your system.
-
-### Installation
-
-1. Navigate to the frontend directory:
-   ```bash
-   cd frontend
-   ```
-
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-
-3. Start the development server:
-   ```bash
-   npm run dev
-   ```
-
-The app will be available at `http://localhost:3000`
-
-### Building for Production
-
-```bash
-npm run build
-```
-
-The built files will be in the `dist` directory.
-
-## API Integration
-
-The frontend is configured to work with the backend API running on `http://localhost:3001`. The Vite dev server includes a proxy configuration to handle API requests.
-
-### Available API Endpoints
-
-- `POST /api/register` - User registration
-- `POST /api/login` - User login
-- `GET /api/me` - Get current user details
-- `GET /api/votes` - Get all polls
-- `POST /api/votes` - Create new poll (admin only)
-- `POST /api/vote/:id` - Vote for a poll option
-- `DELETE /api/vote/:id` - Delete a poll (admin only)
+- **Frontend**: React, Vite, Tailwind CSS
+- **Backend**: Node.js (Express)
+- **Database**: MongoDB (Mongoose)
 
 ## Project Structure
 
 ```
-src/
-├── components/          # Reusable UI components
-│   ├── Navbar.jsx      # Navigation component
-│   └── ProtectedRoute.jsx # Route protection wrapper
-├── contexts/           # React contexts
-│   └── AuthContext.jsx # Authentication state management
-├── pages/              # Page components
-│   ├── Home.jsx        # Landing page
-│   ├── Login.jsx       # Login page
-│   ├── Register.jsx    # Registration page
-│   ├── Dashboard.jsx   # Polls dashboard
-│   ├── CreatePoll.jsx  # Create poll page
-│   └── PollDetails.jsx # Poll details with charts
-├── services/           # API services
-│   └── api.js          # Axios configuration and API calls
-├── App.jsx             # Main app component
-├── main.jsx            # App entry point
-└── index.css           # Global styles
+voting/
+├── backend/
+│   ├── controllers/
+│   ├── middlewares/
+│   ├── models/
+│   ├── config/
+│   ├── seed.js
+│   ├── server.js
+│   └── package.json
+├── frontend/
+│   ├── src/
+│   ├── index.html
+│   ├── package.json
+│   └── ...
+└── README.md
 ```
 
-## Authentication Flow
+## Setup Instructions
 
-1. **Registration/Login**: Users can create accounts or sign in
-2. **JWT Storage**: Tokens are stored in localStorage
-3. **Auto-attach**: Axios automatically includes JWT in API requests
-4. **Route Protection**: Protected routes redirect unauthenticated users
-5. **Token Refresh**: Automatic logout on token expiration
+### Prerequisites
+- Node.js (v16 or higher)
+- MongoDB (local or Atlas)
 
-## User Roles
+### Installation
 
-- **User**: Can view polls and vote (once per poll)
-- **Admin**: Can create and delete polls, plus all user permissions
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/DipeshSinghNegi/CampusSportElect.git
+   cd CampusSportElect/voting
+   ```
 
-## Voting System
+2. **Backend Setup:**
+   ```bash
+   cd backend
+   npm install
+   # Configure MongoDB connection in config/connection.js
+   npm run seed   # Seed demo candidates
+   npm start      # Start backend server (default: http://localhost:3001)
+   ```
 
-- Users can only vote once across all polls
-- Real-time vote counting and updates
-- Interactive charts showing vote distribution
-- Admin controls for poll management
+3. **Frontend Setup:**
+   ```bash
+   cd ../frontend
+   npm install
+   npm run dev    # Start frontend (default: http://localhost:3000)
+   ```
 
-## Development
+## Usage
 
-The app uses Vite for fast development with hot module replacement. The proxy configuration allows seamless API integration during development.
+- **Admin:** Login to access candidate management dashboard. Add/delete candidates, view votes grouped by category/gender.
+- **Student:** Login to vote for one boy and one girl per category. View real-time results and voting summary.
 
-### Available Scripts
+## API Overview
 
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run preview` - Preview production build
-- `npm run lint` - Run ESLint
+- `POST /api/register` — Register user
+- `POST /api/login` — Login user/admin
+- `GET /api/candidates` — List all candidates
+- `POST /api/candidates` — Add candidate (admin)
+- `DELETE /api/candidates/:id` — Delete candidate (admin)
+- `POST /api/candidates/:id/vote` — Vote for candidate
+- `GET /api/results` — Get voting results
 
-## Environment Variables
+## Data Models
 
-Create a `.env` file in the frontend directory if you need to customize the API URL:
-
-```
-VITE_API_URL=http://localhost:3001/api
-```
-
-## Contributing
-
-1. Follow the existing code style
-2. Use meaningful component and variable names
-3. Add proper error handling
-4. Test all user flows
-5. Ensure responsive design
+- **User**: username, password, role (admin/user), votedCategories (category, gender, candidate)
+- **Candidate**: name, photo, sportCategory, gender, votes
+- **Vote**: (tracked in User.votedCategories)
 
 ## License
 
-This project is part of the Voting App system.
+MIT
+
+---
+
+For demo links, screenshots, or more details, see the frontend and backend README files or contact the repo owner.
